@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour
         ColourManager.instance.onColourManagerInit.AddListener(Setup);
     }
 
+    /// <summary>
+    /// Causes a new target colour to be selected and updates the options
+    /// </summary>
     private void Setup()
     {
         //Destroys all existing options
@@ -38,7 +41,7 @@ public class GameManager : MonoBehaviour
         List<string> exclusiveColourKeys = new List<string>(colourKeys);
         exclusiveColourKeys.Remove(targetText.text);
 
-        //Initialises a list of text fields for the names of each option's colour
+        //Initialises a listA of text fields for the names of each option's colour
         List<TextMeshProUGUI> optionTexts = new List<TextMeshProUGUI>();
 
         //Instantiates all options and assigns their text fields to optionTexts
@@ -76,29 +79,13 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Picks a random index from a list
     /// </summary>
-    /// <typeparam name="T">The type of the list</typeparam>
+    /// <typeparam name="T">The type used in the list</typeparam>
     /// <param name="list">The list from which a random index will be returned</param>
     /// <returns></returns>
     private int RandomIndex<T>(List<T> list)
     {
         return Random.Range(0, list.Count);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T">The type of the list</typeparam>
-    /// <param name="list">The list from which a random index will be returned</param>
-    /// <param name="exceptions">An array of elements not to be </param>
-    /// <returns></returns>
-    private int RandomIndex<T>(List<T> list, T[] exceptions)
-    {
-        List<T> exceptionList = new List<T>(list);
-        for (int i = 0; i < exceptions.Length; i++)
-            exceptionList.Remove(exceptions[i]);
-
-        return Random.Range(0, exceptionList.Count);
     }
 }
