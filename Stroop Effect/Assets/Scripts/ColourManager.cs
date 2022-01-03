@@ -1,20 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ColourManager : MonoBehaviour
 {
-    #region Singleton
+    public UnityEvent onColourManagerInit = new UnityEvent();
+
     //An instance of Colour Manager for easy references
     public static ColourManager instance;
-    private void Awake()
-    {
-        if (instance != null)
-            Destroy(gameObject);
-
-        instance = this;
-    }
-    #endregion
 
     [SerializeField, Tooltip("The name and corresponding colour value of all possible target colours")]
     private ColourInfo[] colours;
@@ -30,13 +24,40 @@ public class ColourManager : MonoBehaviour
     //Dictionary pairs names with their colour values for easy referencing
     public Dictionary<string, Color> colourDict = new Dictionary<string, Color>();
 
+    private void Awake()
+    {
+        //Singleton
+        if (instance != null)
+            Destroy(gameObject);
+        instance = this;
+    }
+
     private void Start()
     {
+        //Initialise
+        Init();
+    }
+
+    /// <summary>
+    /// Initialises the ColourManager instance
+    /// </summary>
+    private void Init()
+    {
+        //Returns an error when there aren't enough colours to proceed
+        if (colours.Length <= 1)
+        {
+            Debug.LogError("At least two colours must be assigned");
+            return;
+        }
+
         //All the target colours from the colours array are added to colourDict 
         for (int i = 0; i < colours.Length; i++)
         {
             colourDict.Add(colours[i].name, colours[i].colour);
         }
+
+        //Invoke UnityEvent marking the end of initialisation
+        onColourManagerInit.Invoke();
     }
 
     /// <summary>
