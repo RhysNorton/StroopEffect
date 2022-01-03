@@ -5,10 +5,19 @@ using UnityEngine.Events;
 
 public class ColourManager : MonoBehaviour
 {
-    public UnityEvent onColourManagerInit = new UnityEvent();
-
-    //An instance of Colour Manager for easy references
+    #region Singleton
     public static ColourManager instance;
+    public static ColourManager Instance
+    {
+        get
+        {
+            if (!instance) Debug.LogError("ColourManager is null");
+            return instance;
+        }
+    }
+    #endregion
+
+    public UnityEvent onColourManagerInit = new UnityEvent();
 
     [SerializeField, Tooltip("The name and corresponding colour value of all possible target colours")]
     private ColourInfo[] colours;
@@ -26,9 +35,6 @@ public class ColourManager : MonoBehaviour
 
     private void Awake()
     {
-        //Singleton
-        if (instance != null)
-            Destroy(gameObject);
         instance = this;
     }
 

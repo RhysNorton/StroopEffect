@@ -5,6 +5,18 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    #region Singleton
+    private static GameManager instance;
+    public static GameManager Instance
+    {
+        get
+        {
+            if (!instance) Debug.LogError("GameManager is null");
+            return instance;
+        }
+    }
+    #endregion
+
     [SerializeField, Tooltip("The amount of options that will be instantiated")]
     private int optionAmount = 4;
 
@@ -17,6 +29,11 @@ public class GameManager : MonoBehaviour
     private Transform optionGroup;
     [SerializeField, Tooltip("The prefab instantiated as a colour option")]
     private Transform optionPrefab;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {
