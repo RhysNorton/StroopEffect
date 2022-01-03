@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4761405683220807739
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4761405683220807733}
+  - component: {fileID: 4761405683220807738}
+  - component: {fileID: 4761405683220807732}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4761405683220807733
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4761405683220807739}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4761405683220807738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4761405683220807739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8677e72d68e25b44ab95b274ade74a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colours:
+  - name: Red
+    colour: {r: 1, g: 0, b: 0, a: 1}
+  - name: Orange
+    colour: {r: 1, g: 0.5, b: 0, a: 1}
+  - name: Yellow
+    colour: {r: 1, g: 1, b: 0, a: 1}
+  - name: Green
+    colour: {r: 0, g: 1, b: 0.5, a: 1}
+  - name: Blue
+    colour: {r: 0, g: 0.83333325, b: 1, a: 1}
+  - name: Purple
+    colour: {r: 0.666667, g: 0, b: 1, a: 1}
+  - name: Pink
+    colour: {r: 1, g: 0.39999998, b: 0.79423124, a: 1}
+  - name: Grey
+    colour: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  - name: Black
+    colour: {r: 0, g: 0, b: 0, a: 1}
+--- !u!114 &4761405683220807732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4761405683220807739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f9633cb865b38442a86e0f47c88753b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  optionAmount: 4
+  targetText: {fileID: 0}
+  optionGroup: {fileID: 0}
+  optionPrefab: {fileID: 2894352425012173337, guid: 54c4f722cbbc1f849ac22239e4f1c972, type: 3}
