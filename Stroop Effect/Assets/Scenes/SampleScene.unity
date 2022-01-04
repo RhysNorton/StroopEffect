@@ -624,6 +624,18 @@ PrefabInstance:
       value: Brown
       objectReference: {fileID: 0}
     - target: {fileID: 4761405683220807738, guid: baa01f65367972047bc8fd5d523637a3, type: 3}
+      propertyPath: colours.Array.data[3].colour.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4761405683220807738, guid: baa01f65367972047bc8fd5d523637a3, type: 3}
+      propertyPath: colours.Array.data[3].colour.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4761405683220807738, guid: baa01f65367972047bc8fd5d523637a3, type: 3}
+      propertyPath: colours.Array.data[3].colour.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4761405683220807738, guid: baa01f65367972047bc8fd5d523637a3, type: 3}
       propertyPath: colours.Array.data[6].colour.b
       value: 1
       objectReference: {fileID: 0}

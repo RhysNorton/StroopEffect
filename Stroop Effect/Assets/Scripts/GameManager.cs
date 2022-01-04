@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -65,27 +66,38 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < optionAmount; i++)
             optionTexts.Add(Instantiate(optionPrefab, optionGroup).GetComponentInChildren<TextMeshProUGUI>());
 
-        //Assigns each option with a name and colour
+        //Assigns each option with a name, colour, and a button event
         for (int i = 0; i < optionAmount; i++)
         {
             //Finds the random index of the current option
             int currentOptionIndex = RandomIndex(optionTexts);
 
-            //The first selected option has the correct colour but can't have the corresponding name
+
+            Button optionButton = optionTexts[currentOptionIndex].transform.parent.GetComponentInChildren<Button>();
+
+            //The first selected option is the correct answer
             if (i == 0)
             {
+                //Sets the option button as the correct answer
+                optionButton.onClick.AddListener(CorrectColour);
+
                 //The target colour
                 optionTexts[currentOptionIndex].color = ColourManager.instance.colourDict[targetText.text];
+                
                 //Any name except the target name
                 string key = exclusiveColourKeys[RandomIndex(exclusiveColourKeys)];
                 optionTexts[currentOptionIndex].text = key;
             }
-            //All other options have a random colour that isn't the correct one amd a random name
+            //All other options are incorrect answers
             else
             {
+                //Sets the option button as an incorrect answer
+                optionButton.onClick.AddListener(IncorrectColour);
+
                 //Any colour except the target colour
                 string key = exclusiveColourKeys[RandomIndex(exclusiveColourKeys)];
                 optionTexts[currentOptionIndex].color = ColourManager.instance.colourDict[key];
+                
                 //Random name
                 optionTexts[currentOptionIndex].text = colourKeys[RandomIndex(colourKeys)];
             }
@@ -93,6 +105,24 @@ public class GameManager : MonoBehaviour
             //Removes the option so it can't have its name and colour assigned again
             optionTexts.RemoveAt(currentOptionIndex);
         }
+    }
+
+    /// <summary>
+    /// Functionality occurning when the player selects the correct option
+    /// </summary>
+    private void CorrectColour()
+    {
+        Debug.Log("Correct answer");
+        Setup();
+    }
+
+    /// <summary>
+    /// Functionality occurning when the player selects the incorrect option
+    /// </summary>
+    private void IncorrectColour()
+    {
+        Debug.Log("Incorrect answer");
+        Setup();
     }
 
     /// <summary>
