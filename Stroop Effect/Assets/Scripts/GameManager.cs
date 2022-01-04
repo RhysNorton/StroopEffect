@@ -25,9 +25,29 @@ public class GameManager : MonoBehaviour
 
     [Space]
 
-    [Header("UI")]
+    [SerializeField, Tooltip("The amount of time until the potential score reaches its lowest")]
+    private float roundTime = 3f;
+    [SerializeField, Tooltip("Multiplied by the remaining time to get the score")]
+    private int scoreMultiplier = 100;
+    [SerializeField, Tooltip("Added to the score so it doesn't reach 0")]
+    private int minScore = 100;
+
+    private float timer = 0f;
+    private int roundScore = 0;
+    private int completedRounds = 0;
+
+    [Space]
+
     [SerializeField, Tooltip("The text displaying the name of the colour to be found")]
     private TextMeshProUGUI targetText;
+    [SerializeField, Tooltip("")]
+    private TextMeshProUGUI roundText;
+    [SerializeField, Tooltip("")]
+    private TextMeshProUGUI totalScoreText;
+    [SerializeField, Tooltip("")]
+    private TextMeshProUGUI roundScoreText;
+    [SerializeField, Tooltip("")]
+    private Transform timerImage;
     [SerializeField, Tooltip("The transform of the parent holding all colour options")]
     private Transform optionGroup;
     [SerializeField, Tooltip("The prefab instantiated as a colour option")]
@@ -43,11 +63,31 @@ public class GameManager : MonoBehaviour
         Setup();
     }
 
+    private void Update()
+    {
+        if (timer < 0) timer = 0;
+        else if (timer > 0)
+        {
+            timer -= Time.deltaTime;
+            if (timerImage) timerImage.localScale = new Vector3(timer / roundTime, 1f, 1f);
+        }
+
+        roundScore = Mathf.RoundToInt(timer * 10) * scoreMultiplier + minScore;
+        if (roundScoreText) roundScoreText.text = roundScore.ToString();
+    }
+
     /// <summary>
-    /// Causes a new target colour to be selected and updates the options
+    /// Runs when a new round is starts
     /// </summary>
     private void Setup()
     {
+        completedRounds++;
+        if (roundText) roundText.text = $"Round {completedRounds.ToString()}";
+
+        if (totalScoreText) totalScoreText.text = GameInfo.score.ToString();
+
+        timer = roundTime;
+
         //Destroys all existing options
         for (int i = 0; i < optionGroup.childCount; i++)
             Destroy(optionGroup.GetChild(i).gameObject);
@@ -60,7 +100,7 @@ public class GameManager : MonoBehaviour
         ColourManager.ColourInfo targetColour = colours[RandomIndex(colours)];
 
         //Assigns the target colour value to the target text field
-        targetText.color = targetColour.value;
+        if (targetText) targetText.color = targetColour.value;
 
         //Removes and re-adds the target colour to colours to make it the last index
         colours.Remove(targetColour);
@@ -72,14 +112,15 @@ public class GameManager : MonoBehaviour
             colourNames.Add(colours[i].name);
 
         //Assigns a random colour name to the target text field besides the target colour name
-        targetText.text = colourNames[RandomIndex(colourNames)];
+        if (targetText) targetText.text = colourNames[RandomIndex(colourNames)];
 
         //Initialises a list of text fields for the names of each option's colour
         List<TextMeshProUGUI> optionTexts = new List<TextMeshProUGUI>();
 
         //Instantiates all options and assigns their text fields to optionTexts
         for (int i = 0; i < optionAmount; i++)
-            optionTexts.Add(Instantiate(optionPrefab, optionGroup).GetComponentInChildren<TextMeshProUGUI>());
+            if (optionPrefab && optionGroup)
+                optionTexts.Add(Instantiate(optionPrefab, optionGroup).GetComponentInChildren<TextMeshProUGUI>());
 
         //Forgoes each option from having a different colours if there aren't enough
         if (!repeatColours && colours.Count < optionAmount)
@@ -100,20 +141,20 @@ public class GameManager : MonoBehaviour
             //The first selected option is the correct answer
             if (i == 0)
             {
-                //Sets the option button as the correct answer
-                optionButton.onClick.AddListener(CorrectColour);
-
                 //Sets the option text to the target colour's name
                 optionTexts[currentOptionIndex].text = targetColour.name;
+
+                //Sets the option button as the correct answer
+                optionButton.onClick.AddListener(CorrectColour);
             }
             //All other options are incorrect answers
             else
             {
-                //Sets the option button as an incorrect answer
-                optionButton.onClick.AddListener(IncorrectColour);
-
                 //Sets the option text to any colour's name besides the target's
                 optionTexts[currentOptionIndex].text = colourNames[RandomIndex(colourNames)];
+
+                //Sets the option button as an incorrect answer
+                optionButton.onClick.AddListener(IncorrectColour);
 
                 //Prevents colour names from repeating among the options
                 if (!repeatColours) colourNames.Remove(optionTexts[currentOptionIndex].text);
@@ -129,6 +170,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void CorrectColour()
     {
+        GameInfo.score += roundScore;
+        GameInfo.correctAnswers++;
+
         Debug.Log("Correct answer");
         Setup();
     }
