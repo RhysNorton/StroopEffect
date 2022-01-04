@@ -557,7 +557,11 @@ PrefabInstance:
       objectReference: {fileID: 63666904}
     - target: {fileID: 4761405683220807732, guid: baa01f65367972047bc8fd5d523637a3, type: 3}
       propertyPath: optionAmount
-      value: 4
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4761405683220807732, guid: baa01f65367972047bc8fd5d523637a3, type: 3}
+      propertyPath: repeatColours
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4761405683220807733, guid: baa01f65367972047bc8fd5d523637a3, type: 3}
       propertyPath: m_RootOrder
