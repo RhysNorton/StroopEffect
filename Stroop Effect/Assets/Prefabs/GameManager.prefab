@@ -79,11 +79,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   optionAmount: 4
   repeatColours: 0
-  roundTime: 3
+  roundTime: 4
   scoreMultiplier: 10
   minScore: 100
   targetText: {fileID: 0}
+  roundText: {fileID: 0}
   totalScoreText: {fileID: 0}
   roundScoreText: {fileID: 0}
+  timerImage: {fileID: 0}
   optionGroup: {fileID: 0}
   optionPrefab: {fileID: 2894352425012173337, guid: 54c4f722cbbc1f849ac22239e4f1c972, type: 3}

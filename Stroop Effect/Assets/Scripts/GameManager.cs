@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -17,6 +18,9 @@ public class GameManager : MonoBehaviour
         }
     }
     #endregion
+
+    [HideInInspector]
+    public UnityEvent onPlay = new UnityEvent();
 
     [SerializeField, Tooltip("The amount of options that will be instantiated")]
     private int optionAmount = 4;
@@ -40,13 +44,13 @@ public class GameManager : MonoBehaviour
 
     [SerializeField, Tooltip("The text displaying the name of the colour to be found")]
     private TextMeshProUGUI targetText;
-    [SerializeField, Tooltip("")]
+    [SerializeField, Tooltip("The text displaying which round it is")]
     private TextMeshProUGUI roundText;
-    [SerializeField, Tooltip("")]
+    [SerializeField, Tooltip("The text display the total score of all rounds so far")]
     private TextMeshProUGUI totalScoreText;
-    [SerializeField, Tooltip("")]
+    [SerializeField, Tooltip("The text displaying the score of the current round")]
     private TextMeshProUGUI roundScoreText;
-    [SerializeField, Tooltip("")]
+    [SerializeField, Tooltip("The transform of the image displaying the time left this round")]
     private Transform timerImage;
     [SerializeField, Tooltip("The transform of the parent holding all colour options")]
     private Transform optionGroup;
@@ -60,11 +64,12 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        Setup();
+        onPlay.AddListener(Setup);
     }
 
     private void Update()
     {
+        //Round timer goes down until it reaches 0 and scales the timer image with it
         if (timer < 0) timer = 0;
         else if (timer > 0)
         {
@@ -72,6 +77,7 @@ public class GameManager : MonoBehaviour
             if (timerImage) timerImage.localScale = new Vector3(timer / roundTime, 1f, 1f);
         }
 
+        //Sets the round score based on the timer and displays it in the UI
         roundScore = Mathf.RoundToInt(timer * 10) * scoreMultiplier + minScore;
         if (roundScoreText) roundScoreText.text = roundScore.ToString();
     }
@@ -81,11 +87,14 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void Setup()
     {
+        //Updates the amount of rounds completed and displays it in the UI
         completedRounds++;
         if (roundText) roundText.text = $"Round {completedRounds.ToString()}";
 
+        //Updates the displayed score
         if (totalScoreText) totalScoreText.text = GameInfo.score.ToString();
 
+        //Resets the timer
         timer = roundTime;
 
         //Destroys all existing options
@@ -170,6 +179,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void CorrectColour()
     {
+        //Updates the score and number of correct answers
         GameInfo.score += roundScore;
         GameInfo.correctAnswers++;
 
