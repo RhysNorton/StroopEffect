@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector]
     public UnityEvent onPlay = new UnityEvent();
+    public UnityEvent onFinish = new UnityEvent();
 
     [SerializeField, Tooltip("The amount of options that will be instantiated")]
     private int optionAmount = 4;
@@ -29,6 +30,8 @@ public class GameManager : MonoBehaviour
 
     [Space]
 
+    [SerializeField, Tooltip("The amount of rounds in one game")]
+    private int roundAmount = 10;
     [SerializeField, Tooltip("The amount of time until the potential score reaches its lowest")]
     private float roundTime = 3f;
     [SerializeField, Tooltip("Multiplied by the remaining time to get the score")]
@@ -37,8 +40,6 @@ public class GameManager : MonoBehaviour
     private int minScore = 100;
 
     private float timer = 0f;
-    private int roundScore = 0;
-    private int completedRounds = 0;
 
     [Space]
 
@@ -46,7 +47,7 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI targetText;
     [SerializeField, Tooltip("The text displaying which round it is")]
     private TextMeshProUGUI roundText;
-    [SerializeField, Tooltip("The text display the total score of all rounds so far")]
+    [SerializeField, Tooltip("The text displaying the total score of all rounds so far")]
     private TextMeshProUGUI totalScoreText;
     [SerializeField, Tooltip("The text displaying the score of the current round")]
     private TextMeshProUGUI roundScoreText;
@@ -57,6 +58,13 @@ public class GameManager : MonoBehaviour
     [SerializeField, Tooltip("The prefab instantiated as a colour option")]
     private Transform optionPrefab;
 
+    [Space]
+
+    [SerializeField, Tooltip("The text displaying the player's accuracy at the end of the game")]
+    private TextMeshProUGUI accuracyText;
+    [SerializeField, Tooltip("The text displaying the player's score at the end of the game")]
+    private TextMeshProUGUI scoreText;
+
     private void Awake()
     {
         instance = this;
@@ -65,6 +73,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         onPlay.AddListener(Setup);
+        onFinish.AddListener(DisplayResults);
     }
 
     private void Update()
@@ -78,8 +87,8 @@ public class GameManager : MonoBehaviour
         }
 
         //Sets the round score based on the timer and displays it in the UI
-        roundScore = Mathf.RoundToInt(timer * 10) * scoreMultiplier + minScore;
-        if (roundScoreText) roundScoreText.text = roundScore.ToString();
+        GameInfo.roundScore = Mathf.RoundToInt(timer * 10) * scoreMultiplier + minScore;
+        if (roundScoreText) roundScoreText.text = GameInfo.roundScore.ToString();
     }
 
     /// <summary>
@@ -88,8 +97,8 @@ public class GameManager : MonoBehaviour
     private void Setup()
     {
         //Updates the amount of rounds completed and displays it in the UI
-        completedRounds++;
-        if (roundText) roundText.text = $"Round {completedRounds.ToString()}";
+        GameInfo.completedRounds++;
+        if (roundText) roundText.text = $"Round {GameInfo.completedRounds.ToString()}";
 
         //Updates the displayed score
         if (totalScoreText) totalScoreText.text = GameInfo.score.ToString();
@@ -172,6 +181,21 @@ public class GameManager : MonoBehaviour
             //Removes the option so it can't have its name and colour value assigned again
             optionTexts.RemoveAt(currentOptionIndex);
         }
+
+        if (GameInfo.completedRounds > roundAmount)
+        {
+            GameInfo.completedRounds = 0;
+            UIManager.Instance.Results();
+        }
+    }
+
+    /// <summary>
+    /// Updates the results canvas to show the accuracy and score of the player
+    /// </summary>
+    private void DisplayResults()
+    {
+        accuracyText.text = $"Accuracy: {GameInfo.correctAnswers.ToString()}/{roundAmount}";
+        scoreText.text = $"Score: {GameInfo.score.ToString()}";
     }
 
     /// <summary>
@@ -180,7 +204,7 @@ public class GameManager : MonoBehaviour
     private void CorrectColour()
     {
         //Updates the score and number of correct answers
-        GameInfo.score += roundScore;
+        GameInfo.score += GameInfo.roundScore;
         GameInfo.correctAnswers++;
 
         Debug.Log("Correct answer");

@@ -4,6 +4,18 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
+    #region Singleton
+    private static UIManager instance;
+    public static UIManager Instance
+    {
+        get
+        {
+            if (!instance) Debug.LogError("UIManager is null");
+            return instance;
+        }
+    }
+    #endregion
+
     public enum GameState { Main, Game, Results }
     private GameState gameState = GameState.Main;
 
@@ -13,6 +25,11 @@ public class UIManager : MonoBehaviour
     private Transform gameCanvas;
     [SerializeField, Tooltip("The results canvas")]
     private Transform resultsCanvas;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {
@@ -37,11 +54,9 @@ public class UIManager : MonoBehaviour
     {
         gameState = GameState.Results;
         SetActiveCanvas();
+        GameManager.Instance.onFinish.Invoke();
     }
 
-    /// <summary>
-    /// Quits the game
-    /// </summary>
     public void Quit()
     {
         #if UNITY_STANDALONE
